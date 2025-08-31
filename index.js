@@ -37,6 +37,24 @@ app.delete("/books/:id", (req, res) => {
     }
 })
 
+app.post("/books/:id", (req, res) => {
+    const bookId = parseInt(req.params.id)
+    const updatedBookData = req.body
+
+    const bookToUpdate = books.find(book => book.id === bookId)
+
+    if(!bookToUpdate){
+        res.status(404).json({error: "Book Not Found."})
+    }else{
+        if(!updatedBookData.title || !updatedBookData.author || !updatedBookData.year){
+            res.status(400).json({error: "Title, author and year are required."})
+        }else{
+            Object.assign(bookToUpdate, updatedBookData)
+            res.status(201).json({message: "Book Data Updated Successfully."})
+        }
+    }
+})
+
 app.get("/books", (req, res) => {
     res.send(books)
 })
@@ -67,6 +85,24 @@ app.delete("/todos/:id", (req, res) => {
     }else{
         todos.splice(index, 1)
         res.status(200).json({message: "Todo Deleted Successfully"})
+    }
+})
+
+app.post("/todos/:id", (req, res) => {
+    const todoId = parseInt(req.params.id)
+    const updatedTodosData = req.body
+
+    const todoToUpdate = todos.find(todo => todo.id === todoId)
+
+    if(!todoToUpdate){
+        res.status(404).json({error: "Todo not found."})
+    }else{
+        if(!updatedTodosData.title || !updatedTodosData.day){
+            res.status(400).json({error: "Title and day are required."})
+        }else{
+            Object.assign(todoToUpdate, updatedTodosData)
+            res.status(201).json({message: "Todo data updated successfully."})
+        }
     }
 })
 
